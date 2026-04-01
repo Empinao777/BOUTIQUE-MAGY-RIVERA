@@ -35,10 +35,9 @@
       background-size: 110px 110px;
       background-attachment: fixed;
       transition: background-color 0.4s, color 0.4s;
-      cursor: none;
     }
 
-    /* cursor personalizado corazón */
+    /* cursor corazón, solo se activa en pc con js */
     #cursor {
       position: fixed;
       pointer-events: none;
@@ -47,6 +46,7 @@
       transform: translate(-50%, -50%);
       transition: transform 0.08s ease;
       user-select: none;
+      display: none;
     }
 
     /* splash */
@@ -119,7 +119,7 @@
       padding: 9px 18px;
       color: white;
       font-size: 1.1rem;
-      cursor: none;
+      cursor: pointer;
       box-shadow: 0 3px 14px var(--sombra);
       transition: transform 0.2s, background 0.3s;
     }
@@ -165,7 +165,7 @@
       text-shadow: 0 1px 3px rgba(0,0,0,0.5), 0 3px 10px rgba(0,0,0,0.3);
     }
 
-    /* banner de frases rotativas */
+    /* banner frases */
     .banner-frases {
       background: var(--rosa);
       overflow: hidden;
@@ -187,9 +187,7 @@
       text-shadow: 0 1px 4px rgba(0,0,0,0.2);
     }
 
-    .frases-track span::before {
-      content: "✦ ";
-    }
+    .frases-track span::before { content: "✦ "; }
 
     @keyframes correrFrases {
       from { transform: translateX(0); }
@@ -223,7 +221,7 @@
       margin-bottom: 32px;
     }
 
-    /* íconos redes con animación */
+    /* redes */
     .iconos-redes {
       display: flex;
       justify-content: center;
@@ -251,7 +249,7 @@
       height: 64px;
       border-radius: 16px;
       box-shadow: 0 4px 15px var(--sombra);
-      transition: box-shadow 0.25s, transform 0.25s;
+      transition: box-shadow 0.25s;
     }
 
     .iconos-redes a:hover img {
@@ -340,7 +338,7 @@
       color: var(--texto);
     }
 
-    /* contador visitas */
+    /* contador */
     .contador-wrap {
       margin-top: 14px;
       font-size: 0.88rem;
@@ -381,7 +379,7 @@
 </head>
 <body>
 
-  <!-- cursor corazón -->
+  <!-- cursor corazón (solo pc) -->
   <div id="cursor">💗</div>
 
   <!-- splash -->
@@ -401,7 +399,6 @@
       <p class="slogan">✦ Donde el lujo no cuesta más ✦</p>
     </header>
 
-    <!-- banner frases rotativas (duplicadas para loop infinito) -->
     <div class="banner-frases">
       <div class="frases-track">
         <span>Nueva colección disponible</span>
@@ -419,7 +416,6 @@
       </div>
     </div>
 
-    <!-- redes -->
     <section class="tarjeta">
       <h2>Síguenos</h2>
       <p class="sub">Toca un ícono para visitarnos 💕</p>
@@ -449,7 +445,6 @@
       <div class="contador-wrap" id="contadorTexto">👁️ Cargando visitas...</div>
     </section>
 
-    <!-- por qué elegirnos -->
     <section class="tarjeta">
       <h2>¿Por qué elegirnos?</h2>
       <p class="sub">Porque tú te mereces lo mejor 💖</p>
@@ -472,7 +467,6 @@
       </div>
     </section>
 
-    <!-- horario -->
     <section class="tarjeta">
       <h2>🕐 Horario de atención</h2>
       <p class="sub">¡Te esperamos con los brazos abiertos!</p>
@@ -488,7 +482,6 @@
       </div>
     </section>
 
-    <!-- ubicación -->
     <section class="tarjeta">
       <h2>📍 ¿Dónde estamos?</h2>
       <p class="direccion-texto">Calle Correos #190, Barrio Segundo, Cosoleacaque, Veracruz</p>
@@ -505,14 +498,25 @@
   </div>
 
   <script>
-    // cursor corazón
+    // cursor corazón solo en dispositivos con mouse (no celular)
     const cursor = document.getElementById('cursor')
-    document.addEventListener('mousemove', e => {
-      cursor.style.left = e.clientX + 'px'
-      cursor.style.top  = e.clientY + 'px'
-    })
-    document.addEventListener('mousedown', () => cursor.style.transform = 'translate(-50%,-50%) scale(1.4)')
-    document.addEventListener('mouseup',   () => cursor.style.transform = 'translate(-50%,-50%) scale(1)')
+    const esTactil = window.matchMedia('(pointer: coarse)').matches
+
+    if (!esTactil) {
+      cursor.style.display = 'block'
+      document.body.style.cursor = 'none'
+      document.getElementById('btnTema').style.cursor = 'none'
+      document.addEventListener('mousemove', e => {
+        cursor.style.left = e.clientX + 'px'
+        cursor.style.top  = e.clientY + 'px'
+      })
+      document.addEventListener('mousedown', () => {
+        cursor.style.transform = 'translate(-50%,-50%) scale(1.4)'
+      })
+      document.addEventListener('mouseup', () => {
+        cursor.style.transform = 'translate(-50%,-50%) scale(1)'
+      })
+    }
 
     // modo noche/día
     function cambiarTema() {
@@ -527,11 +531,12 @@
       }
     }
 
-    // contador de visitas con localStorage
+    // contador de visitas
     const key = 'magy_visitas'
     let visitas = parseInt(localStorage.getItem(key) || '0') + 1
     localStorage.setItem(key, visitas)
-    document.getElementById('contadorTexto').textContent = `👁️ ${visitas.toLocaleString()} visita${visitas !== 1 ? 's' : ''} a esta página`
+    document.getElementById('contadorTexto').textContent =
+      `👁️ ${visitas.toLocaleString()} visita${visitas !== 1 ? 's' : ''} a esta página`
   </script>
 
 </body>
