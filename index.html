@@ -1,544 +1,2093 @@
 <!DOCTYPE html>
-<html lang="es" data-tema="dia">
+<html lang="es">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Magy Rivera Boutique</title>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Magy Rivera Boutique — Cosoleacaque</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,400;1,600&family=Jost:wght@300;400;500;600&display=swap"
+    rel="stylesheet" />
   <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
+
     :root {
       --rosa: #c0306a;
-      --rosa-claro: #e8819f;
-      --fondo: #fce4ec;
+      --rosa-deep: #8a1a45;
+      --rosa-soft: #f7d6e4;
+      --rosa-light: #fdf0f5;
       --blanco: #ffffff;
-      --texto: #3a2030;
-      --sombra: rgba(192, 48, 106, 0.18);
+      --crema: #faf7f8;
+      --texto: #2a0d1a;
+      --muted: #9a6878;
+      --borde: #f0dce6;
+      --sombra: 0 2px 8px rgba(192, 48, 106, .10), 0 8px 32px rgba(192, 48, 106, .08);
+      --sombra-lg: 0 8px 40px rgba(192, 48, 106, .18);
+      --nav-bg: rgba(255, 255, 255, .88);
     }
 
-    [data-tema="noche"] {
-      --fondo: #1a0a12;
-      --blanco: #2a1020;
-      --texto: #f5d0e0;
-      --sombra: rgba(192, 48, 106, 0.4);
-      --rosa-claro: #d4608a;
+    body.dark {
+      --blanco: #1e1020;
+      --crema: #180e18;
+      --texto: #f0dde8;
+      --muted: #c09ab0;
+      --borde: #3a1e30;
+      --rosa-light: #1e1025;
+      --rosa-soft: #3a1535;
+      --sombra: 0 2px 8px rgba(0, 0, 0, .3), 0 8px 32px rgba(0, 0, 0, .2);
+      --sombra-lg: 0 8px 40px rgba(0, 0, 0, .4);
+      --nav-bg: rgba(20, 8, 18, .92);
     }
 
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html {
+      scroll-behavior: smooth
+    }
 
     body {
-      font-family: 'Lato', sans-serif;
-      background-color: var(--fondo);
+      font-family: 'Jost', sans-serif;
+      background: var(--crema);
       color: var(--texto);
-      background-image: url('flor.png');
-      background-repeat: repeat;
-      background-size: 110px 110px;
-      background-attachment: fixed;
-      transition: background-color 0.4s, color 0.4s;
+      overflow-x: hidden;
+      transition: background .35s, color .35s
     }
 
-    /* cursor corazón, solo se activa en pc con js */
-    #cursor {
+    #cur {
       position: fixed;
       pointer-events: none;
       z-index: 99999;
-      font-size: 1.2rem;
       transform: translate(-50%, -50%);
-      transition: transform 0.08s ease;
-      user-select: none;
+      transition: transform .08s;
       display: none;
+      width: 22px;
+      height: 22px
     }
 
-    /* splash */
     #splash {
       position: fixed;
       inset: 0;
-      background: linear-gradient(135deg, #c0306a, #8a1a45);
+      z-index: 9999;
+      background: linear-gradient(145deg, #c0306a 0%, #8a1a45 60%, #5a0a2a 100%);
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      z-index: 9999;
-      animation: salirSplash 0.8s ease 2.4s forwards;
+      animation: splashOut .7s ease 2.6s forwards
     }
 
-    #splash img {
-      width: 155px;
-      height: 155px;
-      object-fit: cover;
+    .splash-ring {
+      width: 140px;
+      height: 140px;
       border-radius: 50%;
-      border: 4px solid white;
-      box-shadow: 0 0 50px rgba(255,255,255,0.3);
-      animation: subirFade 0.8s ease 0.2s both;
+      border: 2px solid rgba(255, 255, 255, .25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: ringPulse 2s ease infinite, fadeUp .8s ease .2s both;
+      position: relative
+    }
+
+    .splash-ring::before {
+      content: '';
+      position: absolute;
+      inset: -8px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, .12)
+    }
+
+    .splash-ring img {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid rgba(255, 255, 255, .6);
+      box-shadow: 0 0 40px rgba(0, 0, 0, .3)
     }
 
     #splash h2 {
-      font-family: 'Playfair Display', serif;
+      font-family: 'Cormorant Garamond', serif;
       color: white;
-      font-size: 1.7rem;
-      margin-top: 16px;
-      letter-spacing: 3px;
-      text-shadow: 0 2px 12px rgba(0,0,0,0.3);
-      animation: subirFade 0.8s ease 0.5s both;
+      font-size: 1.9rem;
+      font-weight: 400;
+      letter-spacing: 4px;
+      margin-top: 20px;
+      text-align: center;
+      animation: fadeUp .8s ease .5s both
     }
 
     #splash p {
-      color: rgba(255,255,255,0.82);
-      font-style: italic;
-      font-size: 0.95rem;
-      margin-top: 4px;
-      text-shadow: 0 1px 6px rgba(0,0,0,0.25);
-      animation: subirFade 0.8s ease 0.8s both;
-    }
-
-    @keyframes subirFade {
-      from { opacity: 0; transform: translateY(22px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes salirSplash {
-      to { opacity: 0; pointer-events: none; }
-    }
-
-    #contenido {
-      opacity: 0;
-      animation: aparecer 0.7s ease 2.7s forwards;
-    }
-
-    @keyframes aparecer { to { opacity: 1; } }
-
-    /* botón tema */
-    #btnTema {
-      position: fixed;
-      top: 16px;
-      right: 16px;
-      z-index: 1000;
-      background: var(--rosa);
-      border: none;
-      border-radius: 50px;
-      padding: 9px 18px;
-      color: white;
-      font-size: 1.1rem;
-      cursor: pointer;
-      box-shadow: 0 3px 14px var(--sombra);
-      transition: transform 0.2s, background 0.3s;
-    }
-
-    #btnTema:hover { transform: scale(1.08); }
-
-    /* header */
-    header {
-      text-align: center;
-      background: linear-gradient(160deg, #c0306a 0%, #8a1a45 100%);
-      clip-path: ellipse(100% 86% at 50% 14%);
-      padding: 65px 20px 90px;
-    }
-
-    header img.logo {
-      width: 185px;
-      height: 185px;
-      object-fit: cover;
-      border-radius: 50%;
-      border: 5px solid white;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.28);
-      transition: transform 0.3s;
-    }
-
-    header img.logo:hover { transform: scale(1.05) rotate(2deg); }
-
-    header h1 {
-      font-family: 'Playfair Display', serif;
-      color: white;
-      font-size: 2.4rem;
-      margin-top: 18px;
+      color: rgba(255, 255, 255, .7);
+      font-size: .9rem;
       letter-spacing: 2px;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.4), 0 4px 20px rgba(0,0,0,0.2);
+      text-transform: uppercase;
+      margin-top: 6px;
+      animation: fadeUp .8s ease .8s both
     }
 
-    header .slogan {
-      color: white;
-      font-style: italic;
-      font-size: 1.05rem;
-      font-weight: 700;
-      margin-top: 8px;
-      letter-spacing: 1.5px;
-      text-shadow: 0 1px 3px rgba(0,0,0,0.5), 0 3px 10px rgba(0,0,0,0.3);
-    }
-
-    /* banner frases */
-    .banner-frases {
-      background: var(--rosa);
-      overflow: hidden;
-      padding: 13px 0;
-      white-space: nowrap;
-    }
-
-    .frases-track {
-      display: inline-block;
-      animation: correrFrases 28s linear infinite;
-    }
-
-    .frases-track span {
-      color: white;
-      font-size: 0.95rem;
-      font-weight: 700;
-      letter-spacing: 1px;
-      padding: 0 40px;
-      text-shadow: 0 1px 4px rgba(0,0,0,0.2);
-    }
-
-    .frases-track span::before { content: "✦ "; }
-
-    @keyframes correrFrases {
-      from { transform: translateX(0); }
-      to   { transform: translateX(-50%); }
-    }
-
-    /* tarjetas */
-    .tarjeta {
-      background: var(--blanco);
-      max-width: 760px;
-      margin: 30px auto;
-      border-radius: 22px;
-      padding: 50px 30px;
-      box-shadow: 0 6px 28px var(--sombra);
-      text-align: center;
-      transition: background 0.4s;
-    }
-
-    .tarjeta h2 {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.9rem;
-      color: var(--rosa);
-      margin-bottom: 6px;
-      text-shadow: 0 1px 6px rgba(192, 48, 106, 0.2);
-    }
-
-    .tarjeta .sub {
-      color: var(--rosa-claro);
-      font-size: 1rem;
-      font-weight: 700;
-      margin-bottom: 32px;
-    }
-
-    /* redes */
-    .iconos-redes {
+    .splash-dots {
       display: flex;
-      justify-content: center;
-      gap: 30px;
-      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 28px;
+      animation: fadeUp .8s ease 1.1s both
     }
 
-    .iconos-redes a {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 9px;
-      text-decoration: none;
-      color: var(--texto);
-      font-size: 0.9rem;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-      transition: transform 0.25s;
+    .splash-dots span {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, .4);
+      animation: dotBounce 1.2s ease infinite
     }
 
-    .iconos-redes a:hover { transform: translateY(-7px) scale(1.08); }
-
-    .iconos-redes img {
-      width: 64px;
-      height: 64px;
-      border-radius: 16px;
-      box-shadow: 0 4px 15px var(--sombra);
-      transition: box-shadow 0.25s;
+    .splash-dots span:nth-child(2) {
+      animation-delay: .2s
     }
 
-    .iconos-redes a:hover img {
-      box-shadow: 0 10px 28px var(--sombra);
-      animation: wiggle 0.4s ease;
+    .splash-dots span:nth-child(3) {
+      animation-delay: .4s
     }
 
-    @keyframes wiggle {
-      0%   { transform: rotate(0deg); }
-      25%  { transform: rotate(-8deg); }
-      75%  { transform: rotate(8deg); }
-      100% { transform: rotate(0deg); }
-    }
+    @keyframes dotBounce {
 
-    /* por qué elegirnos */
-    .razones {
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-      flex-wrap: wrap;
-      margin-top: 10px;
-    }
+      0%,
+      100% {
+        transform: translateY(0);
+        opacity: .4
+      }
 
-    .razon {
-      flex: 1;
-      min-width: 180px;
-      max-width: 210px;
-      background: var(--fondo);
-      border-radius: 16px;
-      padding: 28px 18px;
-      text-align: center;
-      transition: transform 0.25s, background 0.4s;
-    }
-
-    .razon:hover { transform: translateY(-5px); }
-
-    .razon .emoji {
-      font-size: 2.4rem;
-      margin-bottom: 12px;
-      display: block;
-    }
-
-    .razon h3 {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.05rem;
-      color: var(--rosa);
-      margin-bottom: 8px;
-    }
-
-    .razon p {
-      font-size: 0.87rem;
-      color: var(--texto);
-      line-height: 1.6;
-      opacity: 0.85;
-    }
-
-    /* horario */
-    .horario-grid {
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-      flex-wrap: wrap;
-      margin-top: 10px;
-    }
-
-    .dia-horario {
-      background: var(--fondo);
-      border-radius: 14px;
-      padding: 20px 28px;
-      min-width: 200px;
-      transition: transform 0.25s, background 0.4s;
-    }
-
-    .dia-horario:hover { transform: translateY(-4px); }
-
-    .dia-horario h3 {
-      font-family: 'Playfair Display', serif;
-      color: var(--rosa);
-      font-size: 1.1rem;
-      margin-bottom: 6px;
-    }
-
-    .dia-horario p {
-      font-size: 1rem;
-      font-weight: 700;
-      color: var(--texto);
-    }
-
-    /* contador */
-    .contador-wrap {
-      margin-top: 14px;
-      font-size: 0.88rem;
-      color: var(--rosa-claro);
-      font-weight: 700;
-      letter-spacing: 0.5px;
-    }
-
-    /* mapa */
-    .tarjeta iframe {
-      width: 100%;
-      max-width: 680px;
-      height: 380px;
-      border: none;
-      border-radius: 14px;
-      box-shadow: 0 4px 18px var(--sombra);
-      margin-top: 10px;
-    }
-
-    .direccion-texto {
-      color: var(--texto);
-      font-size: 1rem;
-      font-weight: 700;
-      margin-bottom: 20px;
-    }
-
-    footer {
-      background: linear-gradient(135deg, #c0306a, #8a1a45);
-      color: white;
-      text-align: center;
-      padding: 24px;
-      font-size: 0.9rem;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-      text-shadow: 0 1px 4px rgba(0,0,0,0.3);
-    }
-  </style>
-</head>
-<body>
-
-  <!-- cursor corazón (solo pc) -->
-  <div id="cursor">💗</div>
-
-  <!-- splash -->
-  <div id="splash">
-    <img src="logo.jpg.jpg" alt="Logo Magy Rivera" />
-    <h2>Magy Rivera</h2>
-    <p>Boutique <p>
-   <p> Donde el lujo no cuesta más <p>
-  </div>
-
-  <button id="btnTema" onclick="cambiarTema()">🌙</button>
-
-  <div id="contenido">
-
-    <header>
-      <img class="logo" src="logo.jpg.jpg" alt="Logo Magy Rivera Boutique" />
-      <h1>Magy Rivera Boutique</h1>
-      <p class="slogan">✦ Donde el lujo no cuesta más ✦</p>
-    </header>
-
-    <div class="banner-frases">
-      <div class="frases-track">
-        <span>Nueva colección disponible</span>
-        <span>Envíos a todo México</span>
-        <span>Moda con corazón</span>
-        <span>Prendas únicas para mujeres únicas</span>
-        <span>El lujo que mereces al precio que quieres</span>
-        <span>Tu boutique de confianza en Cosoleacaque</span>
-        <span>Nueva colección disponible</span>
-        <span>Envíos a todo México</span>
-        <span>Moda con corazón</span>
-        <span>Prendas únicas para mujeres únicas</span>
-        <span>El lujo que mereces al precio que quieres</span>
-        <span>Tu boutique de confianza en Cosoleacaque</span>
-      </div>
-    </div>
-
-    <section class="tarjeta">
-      <h2>Síguenos</h2>
-      <p class="sub">Toca un ícono para visitarnos 💕</p>
-      <div class="iconos-redes">
-
-        <a href="https://www.facebook.com/profile.php?id=100063507883652&locale=es_LA" target="_blank">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="Facebook" />
-          Facebook
-        </a>
-
-        <a href="https://www.instagram.com/magy.riveraa/" target="_blank">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" alt="Instagram" />
-          Instagram
-        </a>
-
-        <a href="https://wa.me/529221282878" target="_blank">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" />
-          WhatsApp
-        </a>
-
-        <a href="https://www.tiktok.com/@magyriverat" target="_blank">
-          <img src="https://upload.wikimedia.org/wikipedia/en/a/a9/TikTok_logo.svg" alt="TikTok" />
-          TikTok
-        </a>
-
-      </div>
-      <div class="contador-wrap" id="contadorTexto">👁️ Cargando visitas...</div>
-    </section>
-
-    <section class="tarjeta">
-      <h2>¿Por qué elegirnos?</h2>
-      <p class="sub">Porque tú te mereces lo mejor 💖</p>
-      <div class="razones">
-        <div class="razon">
-          <span class="emoji">🚚</span>
-          <h3>Envíos a todo México</h3>
-          <p>Llevamos tu pedido hasta la puerta de tu casa, donde quiera que estés.</p>
-        </div>
-        <div class="razon">
-          <span class="emoji">✨</span>
-          <h3>Calidad sin igual</h3>
-          <p>Las prendas más bonitas, elegantes y exclusivas al precio que mereces.</p>
-        </div>
-        <div class="razon">
-          <span class="emoji">💗</span>
-          <h3>Con amor de verdad</h3>
-          <p>Cada clienta es especial para nosotras. Te atendemos con el corazón.</p>
-        </div>
-      </div>
-    </section>
-
-    <section class="tarjeta">
-      <h2>🕐 Horario de atención</h2>
-      <p class="sub">¡Las espero y las abrazo con mi corazón lleno de amor!</p>
-      <div class="horario-grid">
-        <div class="dia-horario">
-          <h3>Lunes — Viernes</h3>
-          <p>10:00 am – 7:00 pm</p>
-        </div>
-        <div class="dia-horario">
-          <h3>Sábado</h3>
-          <p>10:00 am – 5:00 pm</p>
-        </div>
-      </div>
-    </section>
-
-    <section class="tarjeta">
-      <h2>📍 ¿Dónde estamos?</h2>
-      <p class="direccion-texto">Calle Correos #190, Barrio Segundo, Cosoleacaque, Veracruz</p>
-      <iframe
-        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3768.234!2d-94.6361963!3d17.9977657!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85e989e343a54db7%3A0x82cec7596b6a5654!2sMagy%20Rivera!5e0!3m2!1ses!2smx!4v1"
-        allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade">
-      </iframe>
-    </section>
-
-    <footer>
-      <p>© 2025 Magy Rivera Boutique &nbsp;·&nbsp; Cosoleacaque, Veracruz 🌸</p>
-    </footer>
-
-  </div>
-
-  <script>
-    // cursor corazón solo en dispositivos con mouse (no celular)
-    const cursor = document.getElementById('cursor')
-    const esTactil = window.matchMedia('(pointer: coarse)').matches
-
-    if (!esTactil) {
-      cursor.style.display = 'block'
-      document.body.style.cursor = 'none'
-      document.getElementById('btnTema').style.cursor = 'none'
-      document.addEventListener('mousemove', e => {
-        cursor.style.left = e.clientX + 'px'
-        cursor.style.top  = e.clientY + 'px'
-      })
-      document.addEventListener('mousedown', () => {
-        cursor.style.transform = 'translate(-50%,-50%) scale(1.4)'
-      })
-      document.addEventListener('mouseup', () => {
-        cursor.style.transform = 'translate(-50%,-50%) scale(1)'
-      })
-    }
-
-    // modo noche/día
-    function cambiarTema() {
-      const html = document.documentElement
-      const btn  = document.getElementById('btnTema')
-      if (html.getAttribute('data-tema') === 'dia') {
-        html.setAttribute('data-tema', 'noche')
-        btn.textContent = '☀️'
-      } else {
-        html.setAttribute('data-tema', 'dia')
-        btn.textContent = '🌙'
+      50% {
+        transform: translateY(-6px);
+        opacity: 1
       }
     }
 
-    // contador de visitas
-    const key = 'magy_visitas'
-    let visitas = parseInt(localStorage.getItem(key) || '0') + 1
-    localStorage.setItem(key, visitas)
-    document.getElementById('contadorTexto').textContent =
-      `👁️ ${visitas.toLocaleString()} visita${visitas !== 1 ? 's' : ''} a esta página`
-  </script>
+    @keyframes ringPulse {
 
+      0%,
+      100% {
+        box-shadow: 0 0 0 0 rgba(255, 255, 255, .2)
+      }
+
+      50% {
+        box-shadow: 0 0 0 14px rgba(255, 255, 255, 0)
+      }
+    }
+
+    @keyframes splashOut {
+      to {
+        opacity: 0;
+        pointer-events: none
+      }
+    }
+
+    #page {
+      opacity: 0;
+      animation: fadeIn .8s ease 2.9s forwards
+    }
+
+    @keyframes fadeIn {
+      to {
+        opacity: 1
+      }
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
+
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      height: 68px;
+      padding: 0 5vw;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--nav-bg);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--borde);
+      transition: box-shadow .3s, background .35s
+    }
+
+    nav.scrolled {
+      box-shadow: var(--sombra)
+    }
+
+    .nav-brand {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--texto);
+      letter-spacing: .04em;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 10px
+    }
+
+    .nav-brand em {
+      color: var(--rosa);
+      font-style: italic
+    }
+
+    .nav-logo {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--borde);
+      display: none
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      align-items: center
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--muted);
+      font-size: .8rem;
+      font-weight: 500;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      transition: color .2s;
+      cursor: pointer
+    }
+
+    .nav-links a:hover {
+      color: var(--rosa)
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 12px
+    }
+
+    .nav-wa {
+      background: var(--rosa);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      padding: 9px 20px;
+      font-family: 'Jost', sans-serif;
+      font-size: .82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all .2s;
+      letter-spacing: .04em;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px
+    }
+
+    .nav-wa:hover {
+      background: var(--rosa-deep);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(192, 48, 106, .35)
+    }
+
+    .nav-wa svg {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0
+    }
+
+    .nav-dark {
+      background: none;
+      border: 1.5px solid var(--borde);
+      color: var(--muted);
+      border-radius: 50px;
+      width: 36px;
+      height: 36px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all .2s;
+      flex-shrink: 0;
+      padding: 0
+    }
+
+    .nav-dark:hover {
+      border-color: var(--rosa)
+    }
+
+    .nav-dark svg {
+      width: 18px;
+      height: 18px;
+      stroke: var(--muted);
+      fill: none;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round
+    }
+
+    .nav-dark:hover svg {
+      stroke: var(--rosa)
+    }
+
+    .marquee-wrap {
+      background: var(--rosa);
+      overflow: hidden;
+      padding: 11px 0;
+      margin-top: 68px
+    }
+
+    .marquee-track {
+      display: inline-flex;
+      animation: marquee 30s linear infinite;
+      white-space: nowrap
+    }
+
+    .marquee-track span {
+      color: white;
+      font-size: .82rem;
+      font-weight: 500;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      padding: 0 32px;
+      opacity: .95
+    }
+
+    .marquee-track span::before {
+      content: '✦  ';
+      opacity: .6
+    }
+
+    @keyframes marquee {
+      from {
+        transform: translateX(0)
+      }
+
+      to {
+        transform: translateX(-50%)
+      }
+    }
+
+    .hero {
+      min-height: 92vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      padding: 0 8vw;
+      align-items: center;
+      gap: 4vw;
+      position: relative;
+      overflow: hidden
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      right: -10vw;
+      top: -10vh;
+      width: 60vw;
+      height: 110vh;
+      border-radius: 50%;
+      background: radial-gradient(ellipse, var(--rosa-soft) 0%, transparent 70%);
+      opacity: .5;
+      pointer-events: none
+    }
+
+    .hero-left {
+      position: relative;
+      z-index: 1
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--rosa-soft);
+      color: var(--rosa);
+      padding: 6px 16px;
+      border-radius: 50px;
+      font-size: .75rem;
+      font-weight: 600;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      margin-bottom: 1.8rem
+    }
+
+    .hero-eyebrow::before {
+      content: '✦';
+      font-size: .55rem
+    }
+
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.8rem, 5.5vw, 4.8rem);
+      font-weight: 300;
+      line-height: 1.05;
+      letter-spacing: -.01em;
+      margin-bottom: 1.4rem
+    }
+
+    .hero-title em {
+      color: var(--rosa);
+      font-style: italic;
+      font-weight: 400
+    }
+
+    .hero-title strong {
+      font-weight: 600
+    }
+
+    .hero-desc {
+      color: var(--muted);
+      font-size: 1rem;
+      line-height: 1.75;
+      max-width: 400px;
+      margin-bottom: 2.2rem
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap
+    }
+
+    .btn-rosa {
+      background: var(--rosa);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      padding: 14px 32px;
+      font-family: 'Jost', sans-serif;
+      font-size: .9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all .2s;
+      letter-spacing: .04em;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px
+    }
+
+    .btn-rosa:hover {
+      background: var(--rosa-deep);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(192, 48, 106, .35)
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--texto);
+      border: 1.5px solid var(--borde);
+      border-radius: 50px;
+      padding: 13px 28px;
+      font-family: 'Jost', sans-serif;
+      font-size: .9rem;
+      cursor: pointer;
+      transition: all .2s
+    }
+
+    .btn-ghost:hover {
+      border-color: var(--rosa);
+      color: var(--rosa)
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 2.5rem;
+      margin-top: 2.8rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--borde)
+    }
+
+    .h-stat-n {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--rosa);
+      line-height: 1
+    }
+
+    .h-stat-l {
+      font-size: .75rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      margin-top: 3px
+    }
+
+    .hero-right {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      gap: 12px;
+      height: 70vh
+    }
+
+    .hero-img {
+      border-radius: 20px;
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center
+    }
+
+    .hero-img:nth-child(1) {
+      background: linear-gradient(135deg, #f7d6e4, #efc0d2);
+      border-radius: 32px 20px 20px 20px
+    }
+
+    .hero-img:nth-child(2) {
+      background: linear-gradient(135deg, #fce4ec, #f7c8d8);
+      border-radius: 20px 32px 20px 20px;
+      margin-top: 24px
+    }
+
+    .hero-img:nth-child(3) {
+      background: linear-gradient(135deg, #f0d0e0, #e8b8cc);
+      border-radius: 20px 20px 20px 32px;
+      margin-bottom: 24px
+    }
+
+    .hero-img:nth-child(4) {
+      background: linear-gradient(135deg, #fce8f0, #f4c4d8);
+      border-radius: 20px 20px 32px 20px
+    }
+
+    .hero-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover
+    }
+
+    .hero-img svg {
+      width: 56px;
+      height: 56px;
+      opacity: .6;
+      flex-shrink: 0
+    }
+
+    .hero-img-label {
+      position: absolute;
+      bottom: 12px;
+      left: 12px;
+      right: 12px;
+      background: rgba(255, 255, 255, .85);
+      backdrop-filter: blur(8px);
+      border-radius: 10px;
+      padding: 8px 12px;
+      font-size: .75rem;
+      font-weight: 600;
+      color: #2a0d1a;
+      letter-spacing: .04em
+    }
+
+    .sec-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--rosa);
+      font-size: .75rem;
+      font-weight: 600;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      margin-bottom: 1rem
+    }
+
+    .sec-eyebrow::before {
+      content: '';
+      display: inline-block;
+      width: 20px;
+      height: 1.5px;
+      background: var(--rosa)
+    }
+
+    .sec-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 3.5vw, 2.8rem);
+      font-weight: 300;
+      line-height: 1.1;
+      margin-bottom: .5rem
+    }
+
+    .sec-title em {
+      color: var(--rosa);
+      font-style: italic
+    }
+
+    #imagen-boutique {
+      padding: 80px 8vw;
+      background: var(--rosa-light);
+      display: none
+    }
+
+    .ib-wrap {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 48px;
+      align-items: center;
+      max-width: 800px;
+      margin: 0 auto
+    }
+
+    .ib-foto {
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 5px solid var(--rosa-soft);
+      box-shadow: var(--sombra-lg);
+      flex-shrink: 0
+    }
+
+    .ib-texto-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--rosa-soft);
+      color: var(--rosa);
+      padding: 5px 14px;
+      border-radius: 50px;
+      font-size: .72rem;
+      font-weight: 600;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      margin-bottom: 12px
+    }
+
+    .ib-nombre {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem;
+      font-weight: 600;
+      line-height: 1.1;
+      margin-bottom: 8px
+    }
+
+    .ib-nombre em {
+      color: var(--rosa);
+      font-style: italic
+    }
+
+    .ib-lema {
+      color: var(--muted);
+      font-size: 1rem;
+      line-height: 1.7
+    }
+
+    @media(max-width:700px) {
+      .ib-wrap {
+        grid-template-columns: 1fr;
+        text-align: center
+      }
+
+      .ib-foto {
+        margin: 0 auto
+      }
+    }
+
+    #galeria {
+      padding: 80px 8vw;
+      background: var(--crema);
+      display: none
+    }
+
+    .galeria-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 14px;
+      margin-top: 2.5rem
+    }
+
+    .galeria-item {
+      border-radius: 18px;
+      overflow: hidden;
+      aspect-ratio: 1;
+      background: var(--rosa-soft)
+    }
+
+    .galeria-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform .4s
+    }
+
+    .galeria-item:hover img {
+      transform: scale(1.05)
+    }
+
+    .ofertas-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 2.5rem;
+      flex-wrap: wrap;
+      gap: 1rem
+    }
+
+    .ver-todo {
+      color: var(--rosa);
+      font-size: .85rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      letter-spacing: .04em;
+      transition: gap .2s;
+      display: flex;
+      align-items: center;
+      gap: 6px
+    }
+
+    .ver-todo:hover {
+      gap: 10px
+    }
+
+    .ofertas-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1.5rem
+    }
+
+    .oferta-card {
+      background: var(--blanco);
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: var(--sombra);
+      transition: transform .25s, box-shadow .25s;
+      cursor: pointer;
+      position: relative
+    }
+
+    .oferta-card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--sombra-lg)
+    }
+
+    .oferta-img {
+      height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden
+    }
+
+    .oferta-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover
+    }
+
+    .oferta-img svg {
+      width: 64px;
+      height: 64px;
+      opacity: .55;
+      flex-shrink: 0
+    }
+
+    .oferta-badge {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: var(--rosa);
+      color: white;
+      font-size: .7rem;
+      font-weight: 700;
+      letter-spacing: .06em;
+      padding: 4px 10px;
+      border-radius: 50px;
+      text-transform: uppercase
+    }
+
+    .oferta-badge.nuevo {
+      background: #2d8a5e
+    }
+
+    .oferta-body {
+      padding: 18px 20px 20px
+    }
+
+    .oferta-cat {
+      font-size: .72rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      margin-bottom: 4px
+    }
+
+    .oferta-nombre {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+      line-height: 1.2
+    }
+
+    .oferta-desc {
+      font-size: .82rem;
+      color: var(--muted);
+      margin-bottom: 14px;
+      line-height: 1.5
+    }
+
+    .oferta-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between
+    }
+
+    .oferta-precio {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--texto)
+    }
+
+    .oferta-precio-old {
+      font-size: .82rem;
+      color: var(--muted);
+      text-decoration: line-through;
+      font-family: 'Jost', sans-serif
+    }
+
+    .wa-mini {
+      background: var(--rosa);
+      color: white;
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all .2s;
+      flex-shrink: 0;
+      padding: 0
+    }
+
+    .wa-mini:hover {
+      background: var(--rosa-deep);
+      transform: scale(1.1)
+    }
+
+    .wa-mini svg {
+      width: 18px;
+      height: 18px
+    }
+
+    .cat-tabs {
+      display: flex;
+      gap: .5rem;
+      flex-wrap: wrap;
+      margin-bottom: 2.5rem
+    }
+
+    .cat-tab {
+      background: transparent;
+      border: 1.5px solid var(--borde);
+      border-radius: 50px;
+      padding: 7px 20px;
+      font-family: 'Jost', sans-serif;
+      font-size: .8rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all .2s;
+      color: var(--muted)
+    }
+
+    .cat-tab:hover {
+      border-color: var(--rosa);
+      color: var(--rosa)
+    }
+
+    .cat-tab.active {
+      background: var(--rosa);
+      border-color: var(--rosa);
+      color: white
+    }
+
+    .cat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 1.5rem
+    }
+
+    .cat-card {
+      background: var(--blanco);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: var(--sombra);
+      transition: transform .25s, box-shadow .25s;
+      animation: fadeUp .4s ease both
+    }
+
+    .cat-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--sombra-lg)
+    }
+
+    .cat-img {
+      height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden
+    }
+
+    .cat-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover
+    }
+
+    .cat-img svg {
+      width: 56px;
+      height: 56px;
+      opacity: .55;
+      flex-shrink: 0
+    }
+
+    .cat-body {
+      padding: 16px 18px 18px
+    }
+
+    .cat-nombre {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.15rem;
+      font-weight: 600;
+      margin-bottom: 3px
+    }
+
+    .cat-det {
+      font-size: .8rem;
+      color: var(--muted);
+      margin-bottom: 12px;
+      line-height: 1.4
+    }
+
+    .cat-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between
+    }
+
+    .cat-precio {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.35rem;
+      font-weight: 700
+    }
+
+    .wa-btn {
+      background: var(--rosa);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      padding: 8px 16px;
+      font-family: 'Jost', sans-serif;
+      font-size: .78rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all .2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px
+    }
+
+    .wa-btn:hover {
+      background: var(--rosa-deep);
+      transform: scale(1.04)
+    }
+
+    .wa-btn svg {
+      width: 13px;
+      height: 13px;
+      flex-shrink: 0
+    }
+
+    .empty-cat {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--muted);
+      grid-column: 1/-1
+    }
+
+    .empty-cat svg {
+      width: 52px;
+      height: 52px;
+      stroke: var(--rosa);
+      fill: none;
+      stroke-width: 1.4;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      margin-bottom: 16px;
+      opacity: .55;
+      display: block;
+      margin-left: auto;
+      margin-right: auto
+    }
+
+    #porque {
+      background: linear-gradient(135deg, var(--rosa) 0%, var(--rosa-deep) 100%);
+      padding: 80px 8vw
+    }
+
+    #porque .sec-eyebrow {
+      color: rgba(255, 255, 255, .7)
+    }
+
+    #porque .sec-eyebrow::before {
+      background: rgba(255, 255, 255, .7)
+    }
+
+    #porque .sec-title {
+      color: white
+    }
+
+    #porque .sec-title em {
+      color: rgba(255, 255, 255, .8);
+      font-style: italic
+    }
+
+    .porque-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2.5rem
+    }
+
+    .porque-card {
+      background: rgba(255, 255, 255, .1);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, .15);
+      border-radius: 20px;
+      padding: 36px 28px;
+      text-align: center;
+      transition: transform .25s, background .25s
+    }
+
+    .porque-card:hover {
+      transform: translateY(-5px);
+      background: rgba(255, 255, 255, .18)
+    }
+
+    .porque-icon-wrap {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, .18);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      border: 1.5px solid rgba(255, 255, 255, .25)
+    }
+
+    .porque-icon-wrap svg {
+      width: 34px;
+      height: 34px;
+      fill: none;
+      stroke: white;
+      stroke-width: 1.6;
+      stroke-linecap: round;
+      stroke-linejoin: round
+    }
+
+    .porque-titulo {
+      font-family: 'Cormorant Garamond', serif;
+      color: white;
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 8px
+    }
+
+    .porque-desc {
+      color: rgba(255, 255, 255, .75);
+      font-size: .85rem;
+      line-height: 1.65
+    }
+
+    /* FACEBOOK FEED */
+    #redes-social {
+      padding: 80px 8vw;
+      background: var(--crema)
+    }
+
+    .fb-card {
+      background: var(--blanco);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: var(--sombra);
+      padding: 20px;
+      max-width: 420px;
+      margin: 2.5rem auto 0
+    }
+
+    .fb-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--borde)
+    }
+
+    .fb-header img {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      object-fit: contain
+    }
+
+    .fb-platform {
+      font-weight: 600;
+      font-size: .9rem;
+      color: var(--texto)
+    }
+
+    .fb-handle {
+      font-size: .78rem;
+      color: var(--muted)
+    }
+
+    .fb-embed {
+      border-radius: 12px;
+      overflow: hidden
+    }
+
+    /* REDES cards */
+    #redes {
+      padding: 60px 8vw;
+      background: var(--crema)
+    }
+
+    .redes-grid {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin-top: 2.5rem
+    }
+
+    .red-card {
+      background: var(--blanco);
+      border-radius: 20px;
+      padding: 28px 32px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--texto);
+      box-shadow: var(--sombra);
+      transition: all .25s;
+      min-width: 140px
+    }
+
+    .red-card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--sombra-lg);
+      color: var(--rosa)
+    }
+
+    .red-card img {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      object-fit: contain
+    }
+
+    .red-nombre {
+      font-size: .82rem;
+      font-weight: 600;
+      letter-spacing: .05em
+    }
+
+    .red-handle {
+      font-size: .75rem;
+      color: var(--muted)
+    }
+
+    #horario {
+      padding: 80px 8vw;
+      background: var(--rosa-light)
+    }
+
+    .horario-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-top: 2.5rem;
+      max-width: 900px;
+      margin-left: auto;
+      margin-right: auto
+    }
+
+    .horario-card {
+      background: var(--blanco);
+      border-radius: 24px;
+      padding: 36px 28px;
+      text-align: center;
+      box-shadow: var(--sombra);
+      transition: transform .25s, box-shadow .25s;
+      position: relative;
+      overflow: hidden
+    }
+
+    .horario-card.hoy {
+      box-shadow: 0 0 0 2.5px var(--rosa), var(--sombra-lg);
+      transform: translateY(-4px)
+    }
+
+    .horario-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--borde);
+      transition: background .3s
+    }
+
+    .horario-card.hoy::before {
+      background: var(--rosa)
+    }
+
+    .horario-card.cerrado::before {
+      background: #e0d0d8
+    }
+
+    .horario-dia-icon {
+      width: 44px;
+      height: 44px;
+      margin: 0 auto 16px;
+      display: block;
+      opacity: .4;
+      transition: opacity .3s
+    }
+
+    .horario-card.hoy .horario-dia-icon {
+      opacity: 1
+    }
+
+    .horario-dia-icon svg {
+      width: 100%;
+      height: 100%;
+      stroke: var(--rosa);
+      fill: none;
+      stroke-width: 1.5;
+      stroke-linecap: round;
+      stroke-linejoin: round
+    }
+
+    .horario-dia {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--rosa);
+      margin-bottom: 8px
+    }
+
+    .horario-hora {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--texto);
+      margin-bottom: 14px
+    }
+
+    .horario-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 6px 14px;
+      border-radius: 50px;
+      font-size: .72rem;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase
+    }
+
+    .horario-badge.abierto {
+      background: var(--rosa-soft);
+      color: var(--rosa)
+    }
+
+    .horario-badge.cerrado-b {
+      background: #f0f0f0;
+      color: #999
+    }
+
+    body.dark .horario-badge.cerrado-b {
+      background: #2a1a22;
+      color: #888
+    }
+
+    .horario-badge .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: currentColor;
+      animation: blink 1.5s ease infinite;
+      flex-shrink: 0
+    }
+
+    .horario-badge.cerrado-b .dot {
+      animation: none
+    }
+
+    .horario-ahora {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: var(--rosa);
+      color: white;
+      font-size: .65rem;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 50px;
+      letter-spacing: .05em;
+      text-transform: uppercase
+    }
+
+    @keyframes blink {
+
+      0%,
+      100% {
+        opacity: 1
+      }
+
+      50% {
+        opacity: .3
+      }
+    }
+
+    #ubicacion {
+      padding: 80px 8vw;
+      background: var(--crema)
+    }
+
+    .mapa-wrap {
+      margin-top: 2rem;
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: var(--sombra-lg)
+    }
+
+    .mapa-wrap iframe {
+      width: 100%;
+      height: 420px;
+      border: none;
+      display: block
+    }
+
+    .dir-texto {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--blanco);
+      border-radius: 14px;
+      padding: 16px 20px;
+      margin-bottom: 1.5rem;
+      box-shadow: var(--sombra);
+      font-size: .9rem;
+      font-weight: 500;
+      width: fit-content
+    }
+
+    footer {
+      background: linear-gradient(135deg, #2a0d1a 0%, #1a0510 100%);
+      color: rgba(255, 255, 255, .6);
+      padding: 48px 8vw 32px
+    }
+
+    .footer-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 2rem;
+      flex-wrap: wrap;
+      margin-bottom: 32px;
+      padding-bottom: 32px;
+      border-bottom: 1px solid rgba(255, 255, 255, .08)
+    }
+
+    .footer-brand {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.8rem;
+      font-weight: 400;
+      color: white;
+      letter-spacing: .04em
+    }
+
+    .footer-brand em {
+      color: var(--rosa);
+      font-style: italic
+    }
+
+    .footer-slogan {
+      font-size: .85rem;
+      color: rgba(255, 255, 255, .45);
+      margin-top: 6px;
+      font-style: italic
+    }
+
+    .footer-links {
+      display: flex;
+      flex-direction: column;
+      gap: .5rem
+    }
+
+    .footer-links a {
+      color: rgba(255, 255, 255, .5);
+      text-decoration: none;
+      font-size: .85rem;
+      transition: color .2s;
+      cursor: pointer
+    }
+
+    .footer-links a:hover {
+      color: var(--rosa)
+    }
+
+    .footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      font-size: .78rem
+    }
+
+    .footer-ic {
+      color: var(--rosa);
+      font-weight: 600
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity .65s ease, transform .65s ease
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0)
+    }
+
+    #toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: var(--rosa);
+      color: white;
+      padding: 12px 28px;
+      border-radius: 50px;
+      font-size: .87rem;
+      font-weight: 600;
+      z-index: 500;
+      transition: transform .35s cubic-bezier(.34, 1.56, .64, 1);
+      pointer-events: none;
+      box-shadow: 0 8px 24px rgba(192, 48, 106, .4);
+      white-space: nowrap
+    }
+
+    #toast.show {
+      transform: translateX(-50%) translateY(0)
+    }
+
+    @media(max-width:900px) {
+      .hero {
+        grid-template-columns: 1fr;
+        padding-top: 40px
+      }
+
+      .hero-right {
+        height: 300px;
+        grid-template-rows: 1fr 1fr
+      }
+
+      .hero-left {
+        text-align: center
+      }
+
+      .hero-actions {
+        justify-content: center
+      }
+
+      .hero-stats {
+        justify-content: center
+      }
+
+      .hero-desc {
+        margin: 0 auto 2.2rem
+      }
+
+      .nav-links a {
+        display: none
+      }
+
+      .footer-top {
+        flex-direction: column
+      }
+
+      .horario-grid {
+        grid-template-columns: 1fr;
+        max-width: 360px
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="cur">
+    <svg viewBox="0 0 24 24" fill="var(--rosa)">
+      <path d="M12 21C12 21 3 13.5 3 8a5 5 0 0 1 9-3 5 5 0 0 1 9 3c0 5.5-9 13-9 13z" />
+    </svg>
+  </div>
+
+  <div id="splash">
+    <div class="splash-ring"><img id="splashLogo" src="logo.jpg.jpg" alt="Magy Rivera" /></div>
+    <h2>Magy Rivera</h2>
+    <p>Boutique · Cosoleacaque</p>
+    <div class="splash-dots"><span></span><span></span><span></span></div>
+  </div>
+
+  <div id="page">
+
+    <nav id="nav">
+      <a class="nav-brand" href="#">
+        <img class="nav-logo" id="navLogo" />
+        Magy <em>Rivera</em>
+      </a>
+      <div class="nav-links">
+        <a onclick="ir('ofertas')">Ofertas</a>
+        <a onclick="ir('catalogo')">Catálogo</a>
+        <a onclick="ir('horario')">Horario</a>
+        <a onclick="ir('ubicacion')">Ubicación</a>
+      </div>
+      <div class="nav-right">
+        <button class="nav-dark" onclick="toggleDark()" id="darkBtn" title="Modo oscuro">
+          <svg id="iconLuna" viewBox="0 0 24 24">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z" />
+          </svg>
+          <svg id="iconSol" viewBox="0 0 24 24" style="display:none">
+            <circle cx="12" cy="12" r="5" />
+            <line x1="12" y1="1" x2="12" y2="3" />
+            <line x1="12" y1="21" x2="12" y2="23" />
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+            <line x1="1" y1="12" x2="3" y2="12" />
+            <line x1="21" y1="12" x2="23" y2="12" />
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+          </svg>
+        </button>
+        <a class="nav-wa" href="https://wa.me/529221282878" target="_blank">
+          <svg viewBox="0 0 24 24" fill="white">
+            <path
+              d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" />
+            <path
+              d="M11.999 2C6.477 2 2 6.477 2 11.999c0 1.99.585 3.84 1.593 5.391L2.046 22l4.719-1.525A9.946 9.946 0 0 0 12 22c5.523 0 10-4.477 10-10S17.522 2 12 2z" />
+          </svg>
+          WhatsApp
+        </a>
+      </div>
+    </nav>
+
+    <div class="marquee-wrap">
+      <div class="marquee-track">
+        <span>Nueva colección disponible</span><span>Envíos a todo México</span><span>Moda con corazón</span>
+        <span>Prendas únicas para mujeres únicas</span><span>El lujo que mereces</span><span>Tu boutique en
+          Cosoleacaque</span>
+        <span>Nueva colección disponible</span><span>Envíos a todo México</span><span>Moda con corazón</span>
+        <span>Prendas únicas para mujeres únicas</span><span>El lujo que mereces</span><span>Tu boutique en
+          Cosoleacaque</span>
+      </div>
+    </div>
+
+    <section class="hero">
+      <div class="hero-left reveal">
+        <div class="hero-eyebrow">Colección 2025</div>
+        <h1 class="hero-title">Moda que<br>te hace <em>brillar</em><br><strong>de verdad</strong></h1>
+        <p class="hero-desc">Prendas cuidadosamente seleccionadas para la mujer que sabe lo que quiere. Estilo, calidad
+          y el precio que mereces.</p>
+        <div class="hero-actions">
+          <button class="btn-rosa" onclick="ir('catalogo')">Ver Catálogo →</button>
+          <button class="btn-ghost" onclick="ir('ofertas')">Ver Ofertas</button>
+        </div>
+        <div class="hero-stats">
+          <div>
+            <div class="h-stat-n">500+</div>
+            <div class="h-stat-l">Clientas felices</div>
+          </div>
+          <div>
+            <div class="h-stat-n">6+</div>
+            <div class="h-stat-l">Años de experiencia</div>
+          </div>
+          <div>
+            <div class="h-stat-n">4.9★</div>
+            <div class="h-stat-l">Calificación</div>
+          </div>
+        </div>
+      </div>
+      <div class="hero-right reveal" id="heroGrid"></div>
+    </section>
+
+    <!-- IMAGEN BOUTIQUE -->
+    <section id="imagen-boutique" class="reveal">
+      <div class="ib-wrap">
+        <img class="ib-foto" id="ibFoto" src="" alt="" />
+        <div>
+          <div class="ib-texto-tag">La imagen de la boutique</div>
+          <h2 class="ib-nombre" id="ibNombre">Magy <em>Rivera</em></h2>
+          <p class="ib-lema" id="ibLema">Fundadora y corazón de la boutique. Años de pasión por la moda femenina,
+            siempre eligiendo con cuidado cada prenda para que tú te sientas única y especial.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- GALERÍA -->
+    <section id="galeria" class="reveal">
+      <div style="text-align:center">
+        <div class="sec-eyebrow" style="justify-content:center">Nuestra boutique</div>
+        <h2 class="sec-title">Un vistazo a nuestro <em>mundo</em></h2>
+      </div>
+      <div class="galeria-grid" id="galeriaGrid"></div>
+    </section>
+
+    <!-- OFERTAS -->
+    <section id="ofertas"
+      style="padding:80px 8vw;background:linear-gradient(180deg,var(--crema) 0%,var(--rosa-light) 100%)">
+      <div class="ofertas-header reveal">
+        <div>
+          <div class="sec-eyebrow">Precios especiales</div>
+          <h2 class="sec-title">Ofertas <em>Destacadas</em></h2>
+        </div>
+        <a class="ver-todo" onclick="ir('catalogo')">Ver todo el catálogo →</a>
+      </div>
+      <div class="ofertas-grid reveal" id="ofertasGrid"></div>
+    </section>
+
+    <!-- CATÁLOGO -->
+    <section id="catalogo" style="padding:80px 8vw;background:var(--crema)">
+      <div class="reveal">
+        <div class="sec-eyebrow">Todas las prendas</div>
+        <h2 class="sec-title">Nuestro <em>Catálogo</em></h2>
+      </div>
+      <div class="cat-tabs reveal" id="catTabs"></div>
+      <div class="cat-grid" id="catGrid"></div>
+    </section>
+
+    <!-- POR QUÉ -->
+    <section id="porque" class="reveal">
+      <div class="sec-eyebrow">Nuestra promesa</div>
+      <h2 class="sec-title">¿Por qué elegir <em>Magy Rivera?</em></h2>
+      <div class="porque-grid">
+        <div class="porque-card">
+          <div class="porque-icon-wrap">
+            <svg viewBox="0 0 48 48">
+              <path d="M24 6l3.6 10.8H38.4l-8.7 6.3 3.3 10.2L24 27l-9 6.3 3.3-10.2-8.7-6.3h10.8z" />
+            </svg>
+          </div>
+          <div class="porque-titulo">Calidad sin igual</div>
+          <p class="porque-desc">Prendas seleccionadas con cuidado. Elegancia al precio que mereces.</p>
+        </div>
+        <div class="porque-card">
+          <div class="porque-icon-wrap">
+            <svg viewBox="0 0 48 48">
+              <rect x="6" y="20" width="36" height="22" rx="2" />
+              <path d="M6 20l6-12h24l6 12" />
+              <line x1="6" y1="20" x2="42" y2="20" />
+              <line x1="18" y1="8" x2="18" y2="20" />
+              <line x1="30" y1="8" x2="30" y2="20" />
+              <line x1="14" y1="30" x2="34" y2="30" />
+            </svg>
+          </div>
+          <div class="porque-titulo">Envíos a todo México</div>
+          <p class="porque-desc">Tu prenda favorita llega hasta la puerta de tu casa, donde quiera que estés.</p>
+        </div>
+        <div class="porque-card">
+          <div class="porque-icon-wrap">
+            <svg viewBox="0 0 48 48">
+              <circle cx="24" cy="16" r="8" />
+              <path d="M8 42c0-8.8 7.2-16 16-16s16 7.2 16 16" />
+              <path d="M29 26l2 5-7 5-7-5 2-5" />
+            </svg>
+          </div>
+          <div class="porque-titulo">Atención con amor</div>
+          <p class="porque-desc">Cada clienta es especial. Te atendemos con dedicación y el corazón.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- FACEBOOK FEED -->
+    <section id="redes-social" class="reveal">
+      <div style="text-align:center">
+        <div class="sec-eyebrow" style="justify-content:center">Últimas publicaciones</div>
+        <h2 class="sec-title">Síguenos en <em>Facebook</em></h2>
+        <p style="color:var(--muted);margin-top:.5rem;font-size:.95rem">Cada vez que publicamos algo nuevo, aparece aquí
+          automáticamente.</p>
+      </div>
+      <div class="fb-card">
+        <div class="fb-header">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg"
+            alt="Facebook" />
+          <div>
+            <div class="fb-platform">Facebook</div>
+            <div class="fb-handle">Magy Rivera</div>
+          </div>
+        </div>
+        <div class="fb-embed">
+          <iframe
+            src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fprofile.php%3Fid%3D100063507883652&tabs=timeline&width=380&height=500&small_header=true&adapt_container_width=true&hide_cover=false&show_facepile=false"
+            width="100%" height="500" style="border:none;overflow:hidden;border-radius:12px" scrolling="no"
+            frameborder="0" allowfullscreen
+            allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>
+        </div>
+      </div>
+    </section>
+
+    <!-- REDES CARDS -->
+    <section id="redes" class="reveal">
+      <div style="text-align:center;margin-bottom:2rem">
+        <div class="sec-eyebrow" style="justify-content:center">Encuéntranos</div>
+        <h2 class="sec-title">Nuestras <em>redes</em></h2>
+      </div>
+      <div class="redes-grid">
+        <a class="red-card" href="https://www.facebook.com/profile.php?id=100063507883652" target="_blank">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg"
+            alt="Facebook" />
+          <div class="red-nombre">Facebook</div>
+          <div class="red-handle">Magy Rivera</div>
+        </a>
+        <a class="red-card" href="https://www.instagram.com/magy.riveraa/" target="_blank">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" alt="Instagram" />
+          <div class="red-nombre">Instagram</div>
+          <div class="red-handle">@magy.riveraa</div>
+        </a>
+        <a class="red-card" href="https://wa.me/529221282878" target="_blank">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" />
+          <div class="red-nombre">WhatsApp</div>
+          <div class="red-handle">922 128 2878</div>
+        </a>
+        <a class="red-card" href="https://www.tiktok.com/@magyriverat" target="_blank">
+          <img src="https://upload.wikimedia.org/wikipedia/en/a/a9/TikTok_logo.svg" alt="TikTok" />
+          <div class="red-nombre">TikTok</div>
+          <div class="red-handle">@magyriverat</div>
+        </a>
+      </div>
+    </section>
+
+    <!-- HORARIO -->
+    <section id="horario" class="reveal">
+      <div style="text-align:center">
+        <div class="sec-eyebrow" style="justify-content:center">Visítanos</div>
+        <h2 class="sec-title">Horario de <em>Atención</em></h2>
+        <p style="color:var(--muted);margin-top:.5rem;font-size:.95rem" id="horarioStatus"></p>
+      </div>
+      <div class="horario-grid" id="horarioGrid"></div>
+    </section>
+
+    <!-- UBICACIÓN -->
+    <section id="ubicacion" class="reveal" style="padding:80px 8vw;background:var(--crema)">
+      <div class="sec-eyebrow">Cómo llegar</div>
+      <h2 class="sec-title">Nuestra <em>Ubicación</em></h2>
+      <div style="margin-top:1.5rem">
+        <div class="dir-texto">
+          <svg width="20" height="20" fill="none" stroke="var(--rosa)" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round" viewBox="0 0 24 24">
+            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" />
+            <circle cx="12" cy="9" r="2.5" />
+          </svg>
+          Calle Correos #190, Barrio Segundo, Cosoleacaque, Veracruz
+        </div>
+        <div class="mapa-wrap">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3768.234!2d-94.6361963!3d17.9977657!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85e989e343a54db7%3A0x82cec7596b6a5654!2sMagy%20Rivera!5e0!3m2!1ses!2smx!4v1"
+            allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="footer-top">
+        <div>
+          <div class="footer-brand">Magy <em>Rivera</em></div>
+          <div class="footer-slogan">Donde el lujo no cuesta más ✦</div>
+        </div>
+        <div class="footer-links">
+          <a onclick="ir('ofertas')">Ofertas</a>
+          <a onclick="ir('catalogo')">Catálogo</a>
+          <a onclick="ir('horario')">Horario</a>
+          <a onclick="ir('ubicacion')">Ubicación</a>
+        </div>
+        <div>
+          <a class="btn-rosa" href="https://wa.me/529221282878" target="_blank" style="font-size:.85rem">
+            <svg viewBox="0 0 24 24" fill="white" style="width:16px;height:16px;flex-shrink:0">
+              <path
+                d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" />
+              <path
+                d="M11.999 2C6.477 2 2 6.477 2 11.999c0 1.99.585 3.84 1.593 5.391L2.046 22l4.719-1.525A9.946 9.946 0 0 0 12 22c5.523 0 10-4.477 10-10S17.522 2 12 2z" />
+            </svg>
+            Contactar por WhatsApp
+          </a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2025 Magy Rivera Boutique · Cosoleacaque, Veracruz</span>
+        <span>Diseño por <span class="footer-ic">Ingeniería Creativa</span></span>
+      </div>
+    </footer>
+
+  </div>
+  <div id="toast"></div>
+
+  <script>
+    // ── WA SVG inline ──
+    const svgWA = `<svg viewBox="0 0 24 24" fill="white" style="width:13px;height:13px;flex-shrink:0"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M11.999 2C6.477 2 2 6.477 2 11.999c0 1.99.585 3.84 1.593 5.391L2.046 22l4.719-1.525A9.946 9.946 0 0 0 12 22c5.523 0 10-4.477 10-10S17.522 2 12 2z"/></svg>`
+
+    // ── SVG por categoría — paths de Heroicons (MIT) ──
+    function catSVG(cat) {
+      const base = `fill="none" stroke="#c0306a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"`
+
+      // Vestidos — icono de vestido hecho a mano, limpio
+      const vestido = `<svg viewBox="0 0 24 24" ${base}><path d="M7 3h10M7 3l-4 5h4v13h10V8h4l-4-5M7 3l2.5 3M17 3l-2.5 3M9.5 6h5"/></svg>`
+
+      // Blusas — camisa/top Heroicons
+      const blusa = `<svg viewBox="0 0 24 24" ${base}><path d="M6 3 2 8l4 2v11h12V10l4-2-4-5M6 3l3 3M18 3l-3 3M9 6h6"/></svg>`
+
+      // Pantalones & Faldas — scissors → mejor usar pantalón limpio
+      const pantalon = `<svg viewBox="0 0 24 24" ${base}><path d="M4 3h16v4l-4 14h-4l-1-7-1 7H6L2 7V3z"/></svg>`
+
+      // Conjuntos — dos piezas
+      const conjunto = `<svg viewBox="0 0 24 24" ${base}><rect x="3" y="3" width="8" height="8" rx="1"/><rect x="13" y="3" width="8" height="8" rx="1"/><rect x="3" y="13" width="8" height="8" rx="1"/><rect x="13" y="13" width="8" height="8" rx="1"/></svg>`
+
+      // Lencería — corazón Heroicons outline
+      const lenceria = `<svg viewBox="0 0 24 24" ${base}><path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"/></svg>`
+
+      // Accesorios — SPARKLES Heroicons ✓ (el bueno)
+      const accesorios = `<svg viewBox="0 0 24 24" ${base}><path d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z"/></svg>`
+
+      // Bolsas — shopping-bag Heroicons
+      const bolsas = `<svg viewBox="0 0 24 24" ${base}><path d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"/></svg>`
+
+      // Skincare — beaker Heroicons
+      const skincare = `<svg viewBox="0 0 24 24" ${base}><path d="M9.75 3.104v5.714a2.25 2.25 0 0 1-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 0 1 4.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0 1 12 15a9.065 9.065 0 0 0-6.23-.693L5 14.5m14.8.8 1.402 1.402c1 1 .03 2.798-1.349 2.798H4.147c-1.38 0-2.35-1.799-1.35-2.798l1.4-1.402M5 14.5l-.693.163"/></svg>`
+
+      // Perfumes — fire/sparkle elegante
+      const perfumes = `<svg viewBox="0 0 24 24" ${base}><path d="M15.362 5.214A8.252 8.252 0 0 1 12 21 8.25 8.25 0 0 1 6.038 7.047 8.287 8.287 0 0 0 9 9.601a8.983 8.983 0 0 1 3.361-6.867 8.21 8.21 0 0 0 3 2.48Z"/><path d="M12 18a3.75 3.75 0 0 0 .495-7.468 5.99 5.99 0 0 0-1.925 3.547 5.975 5.975 0 0 1-2.133-1.001A3.75 3.75 0 0 0 12 18Z"/></svg>`
+
+      const m = {
+        'Vestidos': vestido, 'Blusas': blusa, 'Pantalones & Faldas': pantalon,
+        'Conjuntos': conjunto, 'Lencería': lenceria, 'Accesorios': accesorios,
+        'Bolsas & Regalos': bolsas, 'Skincare & Haircare': skincare, 'Perfumes': perfumes
+      }
+      return m[cat] || accesorios
+    }
+
+    // ── SVGs hero por posición ──
+    // Vestidos, Accesorios (sparkles), Lencería, Nuevos ingresos (price-tag Heroicons)
+    const heroSVGs = [
+      // Vestidos
+      `<svg viewBox="0 0 24 24" fill="none" stroke="#c0306a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:56px;height:56px;opacity:.65"><path d="M7 3h10M7 3l-4 5h4v13h10V8h4l-4-5M7 3l2.5 3M17 3l-2.5 3M9.5 6h5"/></svg>`,
+      // Accesorios — SPARKLES Heroicons ✓
+      `<svg viewBox="0 0 24 24" fill="none" stroke="#c0306a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:56px;height:56px;opacity:.65"><path d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z"/></svg>`,
+      // Lencería — corazón
+      `<svg viewBox="0 0 24 24" fill="none" stroke="#c0306a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:56px;height:56px;opacity:.65"><path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"/></svg>`,
+      // Nuevos ingresos — PRICE TAG Heroicons ✓
+      `<svg viewBox="0 0 24 24" fill="none" stroke="#c0306a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:56px;height:56px;opacity:.65"><path d="M9.568 3H5.25A2.25 2.25 0 0 0 3 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 0 0 5.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 0 0 9.568 3Z"/><path d="M6 6h.008v.008H6V6Z"/></svg>`
+    ]
+    const heroLabels = ['Vestidos', 'Accesorios', 'Lencería', 'Nuevos ingresos']
+
+    // ── SVGs horario ──
+    const svgCal = `<svg viewBox="0 0 48 48"><rect x="6" y="10" width="36" height="32" rx="3"/><line x1="6" y1="20" x2="42" y2="20"/><line x1="16" y1="6" x2="16" y2="14"/><line x1="32" y1="6" x2="32" y2="14"/><rect x="14" y="26" width="6" height="5" rx="1"/><rect x="22" y="26" width="6" height="5" rx="1"/><rect x="30" y="26" width="6" height="5" rx="1"/></svg>`
+    const svgBolsaH = `<svg viewBox="0 0 48 48"><rect x="8" y="18" width="32" height="24" rx="3"/><path d="M16 18v-4a8 8 0 0 1 16 0v4"/><line x1="8" y1="28" x2="40" y2="28"/></svg>`
+    const svgLunaH = `<svg viewBox="0 0 48 48"><path d="M34 38A16 16 0 1 1 10 14a12 12 0 0 0 24 24z"/></svg>`
+
+    // ── CURSOR ──
+    const cur = document.getElementById('cur')
+    if (!window.matchMedia('(pointer:coarse)').matches) {
+      cur.style.display = 'block'
+      document.body.style.cursor = 'none'
+      document.addEventListener('mousemove', e => { cur.style.left = e.clientX + 'px'; cur.style.top = e.clientY + 'px' })
+    }
+
+    // ── DARK MODE ──
+    function toggleDark() {
+      document.body.classList.toggle('dark')
+      const d = document.body.classList.contains('dark')
+      localStorage.setItem('magy_dark', d)
+      document.getElementById('iconLuna').style.display = d ? 'none' : 'block'
+      document.getElementById('iconSol').style.display = d ? 'block' : 'none'
+    }
+    if (localStorage.getItem('magy_dark') === 'true') {
+      document.body.classList.add('dark')
+      document.getElementById('iconLuna').style.display = 'none'
+      document.getElementById('iconSol').style.display = 'block'
+    }
+
+    window.addEventListener('scroll', () => document.getElementById('nav').classList.toggle('scrolled', scrollY > 40))
+    const obs = new IntersectionObserver(entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible') }), { threshold: .12 })
+    document.querySelectorAll('.reveal').forEach(el => obs.observe(el))
+
+    // ── DATA ──
+    const WA = '529221282878'
+    const productos = JSON.parse(localStorage.getItem('magy_productos') || '[]')
+    const boutique = JSON.parse(localStorage.getItem('magy_boutique') || '{}')
+    let catActiva = 'Todas'
+
+    // ── BOUTIQUE (logo, foto mamá, galería) ──
+    function cargarBoutique() {
+      if (boutique.logo) {
+        const nl = document.getElementById('navLogo')
+        nl.src = boutique.logo; nl.style.display = 'block'
+        document.getElementById('splashLogo').src = boutique.logo
+      }
+      if (boutique.face) {
+        const sec = document.getElementById('imagen-boutique')
+        sec.style.display = 'block'
+        document.getElementById('ibFoto').src = boutique.face
+        if (boutique.faceName) {
+          const p = boutique.faceName.trim().split(' ')
+          document.getElementById('ibNombre').innerHTML = `${p[0]} <em>${p.slice(1).join(' ')}</em>`
+        }
+        if (boutique.faceLema) document.getElementById('ibLema').textContent = boutique.faceLema
+      }
+      const galeria = boutique.galeria || []
+      if (galeria.length) {
+        document.getElementById('galeria').style.display = 'block'
+        document.getElementById('galeriaGrid').innerHTML = galeria.map(g => `<div class="galeria-item"><img src="${g.src}" alt="" loading="lazy"/></div>`).join('')
+      }
+      renderHeroGrid(galeria)
+    }
+
+    function renderHeroGrid(galeria) {
+      const fotos = galeria.slice(0, 4)
+      document.getElementById('heroGrid').innerHTML = [0, 1, 2, 3].map(i => `
+      <div class="hero-img">
+        ${fotos[i] ? `<img src="${fotos[i].src}" alt="${heroLabels[i]}"/>` : `${heroSVGs[i]}`}
+        <div class="hero-img-label">${heroLabels[i]}</div>
+      </div>`).join('')
+    }
+
+    function waMensaje(p) {
+      const msg = `Hola Magy! Vi en tu página el *${p.nombre}* y me interesa saber más. Está disponible? Precio: $${p.precio} MXN`
+      window.open(`https://wa.me/${WA}?text=${encodeURIComponent(msg)}`, '_blank')
+    }
+
+    // ── OFERTAS ──
+    function renderOfertas() {
+      const of = productos.filter(p => p.oferta || p.nuevo).slice(0, 4)
+      if (!of.length) {
+        document.getElementById('ofertasGrid').innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:48px 20px;color:var(--muted)"><svg viewBox="0 0 24 24" fill="none" stroke="var(--rosa)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" style="width:52px;height:52px;margin-bottom:16px;opacity:.5;display:block;margin-left:auto;margin-right:auto"><path d="M9.568 3H5.25A2.25 2.25 0 0 0 3 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 0 0 5.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 0 0 9.568 3Z"/><path d="M6 6h.008v.008H6V6Z"/></svg><div style="font-size:1rem;font-weight:600">Próximamente nuevas ofertas</div></div>`
+        return
+      }
+      document.getElementById('ofertasGrid').innerHTML = of.map(p => `
+      <div class="oferta-card">
+        <div class="oferta-img" style="background:${imgBg(p.cat)}">
+          ${p.oferta ? '<div class="oferta-badge">Oferta</div>' : ''}
+          ${p.nuevo ? '<div class="oferta-badge nuevo">Nuevo</div>' : ''}
+          ${p.img ? `<img src="${p.img}" alt="${p.nombre}"/>` : `${catSVG(p.cat)}`}
+        </div>
+        <div class="oferta-body">
+          <div class="oferta-cat">${p.cat}</div>
+          <div class="oferta-nombre">${p.nombre}</div>
+          <div class="oferta-desc">${p.desc}</div>
+          <div class="oferta-footer">
+            <div>
+              <div class="oferta-precio">$${p.precio} <span style="font-size:.85rem;color:var(--muted);font-family:'Jost',sans-serif;font-weight:400">MXN</span></div>
+              ${p.antes ? `<div class="oferta-precio-old">Antes $${p.antes}</div>` : ''}
+            </div>
+            <button class="wa-mini" onclick="waMensaje(${JSON.stringify(p).replace(/"/g, '&quot;')})">${svgWA}</button>
+          </div>
+        </div>
+      </div>`).join('')
+    }
+
+    // ── CATÁLOGO ──
+    function getCats() { return ['Todas', ...new Set(productos.map(p => p.cat).filter(Boolean))] }
+    function renderTabs() {
+      document.getElementById('catTabs').innerHTML = getCats().map(c => `<button class="cat-tab ${c === catActiva ? 'active' : ''}" onclick="filtrar('${c}')">${c}</button>`).join('')
+    }
+    function filtrar(cat) { catActiva = cat; renderTabs(); renderCat() }
+    function renderCat() {
+      const fl = catActiva === 'Todas' ? productos : productos.filter(p => p.cat === catActiva)
+      if (!fl.length) {
+        document.getElementById('catGrid').innerHTML = `<div class="empty-cat"><svg viewBox="0 0 24 24"><path d="M9.568 3H5.25A2.25 2.25 0 0 0 3 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 0 0 5.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 0 0 9.568 3Z"/><path d="M6 6h.008v.008H6V6Z"/></svg><div style="font-size:1rem;font-weight:600">${productos.length ? 'Sin prendas en esta categoría' : 'El catálogo está siendo preparado'}</div><div style="font-size:.85rem;margin-top:6px">${productos.length ? 'Selecciona otra categoría' : 'Pronto encontrarás prendas increíbles aquí'}</div></div>`
+        return
+      }
+      document.getElementById('catGrid').innerHTML = fl.map((p, i) => `
+      <div class="cat-card" style="animation-delay:${i * .04}s">
+        <div class="cat-img" style="background:${imgBg(p.cat)}">
+          ${p.nuevo ? '<div style="position:absolute;top:10px;right:10px;background:#2d8a5e;color:white;font-size:.68rem;font-weight:700;padding:3px 9px;border-radius:50px;text-transform:uppercase;letter-spacing:.05em">Nuevo</div>' : ''}
+          ${p.img ? `<img src="${p.img}" alt="${p.nombre}"/>` : `${catSVG(p.cat)}`}
+        </div>
+        <div class="cat-body">
+          <div class="cat-nombre">${p.nombre}</div>
+          <div class="cat-det">${p.desc}</div>
+          <div class="cat-row">
+            <div class="cat-precio">$${p.precio} <span style="font-size:.8rem;color:var(--muted);font-family:'Jost',sans-serif;font-weight:400">MXN</span></div>
+            <button class="wa-btn" onclick="waMensaje(${JSON.stringify(p).replace(/"/g, '&quot;')})">${svgWA} Pedir</button>
+          </div>
+        </div>
+      </div>`).join('')
+    }
+
+    function imgBg(cat) {
+      const m = { 'Vestidos': 'linear-gradient(135deg,#f7d6e4,#efc0d2)', 'Blusas': 'linear-gradient(135deg,#fce4ec,#f7c8d8)', 'Pantalones & Faldas': 'linear-gradient(135deg,#ede0f0,#dcc8e8)', 'Accesorios': 'linear-gradient(135deg,#fff0e0,#ffe0c0)', 'Conjuntos': 'linear-gradient(135deg,#e0ffe8,#c8f0d4)', 'Lencería': 'linear-gradient(135deg,#fde8f5,#f5c8e8)', 'Bolsas & Regalos': 'linear-gradient(135deg,#fff8e0,#ffe8b0)', 'Skincare & Haircare': 'linear-gradient(135deg,#e8f8f0,#c8ead8)', 'Perfumes': 'linear-gradient(135deg,#f0e8ff,#ddc8f5)' }
+      return m[cat] || 'linear-gradient(135deg,#fce4ec,#f7c8d8)'
+    }
+
+    // ── HORARIO ──
+    function renderHorario() {
+      const ahora = new Date(), dia = ahora.getDay(), hora = ahora.getHours() + ahora.getMinutes() / 60
+      const turnos = [
+        { titulo: 'Lunes — Viernes', svg: svgCal, horas: '10:00 am – 7:00 pm', abre: 10, cierra: 19, dias: [1, 2, 3, 4, 5] },
+        { titulo: 'Sábado', svg: svgBolsaH, horas: '10:00 am – 5:00 pm', abre: 10, cierra: 17, dias: [6] },
+        { titulo: 'Domingo', svg: svgLunaH, horas: 'Cerrado', abre: null, cierra: null, dias: [0] },
+      ]
+      document.getElementById('horarioGrid').innerHTML = turnos.map(t => {
+        const esHoy = t.dias.includes(dia)
+        const ab = esHoy && t.abre !== null && hora >= t.abre && hora < t.cierra
+        const badge = ab ? `<span class="horario-badge abierto"><span class="dot"></span>Abierto ahora</span>` : t.abre === null ? `<span class="horario-badge cerrado-b"><span class="dot"></span>Descansamos</span>` : `<span class="horario-badge cerrado-b"><span class="dot"></span>Cerrado</span>`
+        return `<div class="horario-card${esHoy ? ' hoy' : ''}${t.abre === null ? ' cerrado' : ''}">
+        ${esHoy ? '<div class="horario-ahora">HOY</div>' : ''}
+        <div class="horario-dia-icon">${t.svg}</div>
+        <div class="horario-dia">${t.titulo}</div>
+        <div class="horario-hora">${t.horas}</div>${badge}</div>`
+      }).join('')
+      const th = turnos.find(t => t.dias.includes(dia))
+      const ab = th && th.abre !== null && hora >= th.abre && hora < th.cierra
+      document.getElementById('horarioStatus').textContent = ab ? 'Estamos abiertos ahora mismo — ¡visítanos!' : 'Consulta nuestros horarios para planear tu visita'
+    }
+
+    function ir(id) { document.getElementById(id).scrollIntoView({ behavior: 'smooth' }) }
+    function toast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2400) }
+
+    cargarBoutique(); renderOfertas(); renderTabs(); renderCat(); renderHorario()
+  </script>
 </body>
+
 </html>
